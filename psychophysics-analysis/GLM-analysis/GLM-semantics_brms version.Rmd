@@ -1,0 +1,329 @@
+---
+title: "GLM-semantic-judgement"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#setwd("C:/Users/eschuler/Desktop/perception")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(nnet)
+library(dobson)
+library(viridis)
+library(stargazer)
+library(lme4)
+library(lmerTest)
+library(readxl)
+library(jtools)
+library(dplyr)
+library(brms)
+library(bayesplot)
+library(future)
+plan("multisession")
+options(mc.cores = 3)
+
+library(bayestestR)
+
+
+
+```
+
+```{r}
+data_semantics <- read.csv(file = 'semantic_judgement20p.csv', header = TRUE)
+data_semantics$layer <- factor(data_semantics$layer, levels = c("layer9-17", "layer0-5", "layer6-8"))
+data_semantics$Source.target.pair <- factor(data_semantics$Source.target.pair, levels = c("OO", "TT", "OT"))
+
+## Rename the layers
+levels(data_semantics$layer) <- list( Later = "layer9-17", Early = "layer0-5", Middle = "layer6-8")
+
+attribute_level <- c("Lighting", "Shape/Orientation", "Material", "Color")
+data_semantics$response <- factor(data_semantics$response, levels = attribute_level)
+
+levels(data_semantics$response)
+
+num_people <- 20
+id <- rep(1:num_people,each=450)
+data_semantics$id <- factor(id)
+```
+
+
+see: https://calogica.com/r/rstan/2020/07/05/season-pass-hierarchical-modelng-r-stan-brms.html
+```{r}
+model <- brm(response~layer*Source.target.pair + 
+                            (1| id),
+                          data = data_semantics,
+                          family = "categorical",
+                          iter = 8000, 
+                          chains = 3,
+                          cores = 3)
+
+save(model, file = "semantic_brms.RData")
+
+model_prior <- brm(response~layer*Source.target.pair + 
+                            (1| id),
+                          data = data_semantics,
+                          family = "categorical",
+                          prior = set_prior("normal(0,1)", class = "b"),
+                          iter = 8000, 
+                          chains = 3,
+                          cores = 3)
+
+save(model_prior, file = "semantic_brms_normal_0_1.RData")
+
+
+model_norm10 <- brm(response~layer*Source.target.pair + 
+                            (1| id),
+                          data = data_semantics,
+                          family = "categorical",
+                          prior = set_prior("normal(0,10)", class = "b"),
+                          iter = 8000, 
+                          chains = 3,
+                          cores = 3)
+
+save(model_norm10, file = "semantic_brms_normal_0_10.RData")
+
+
+model_uniform <- brm(response~layer*Source.target.pair + 
+                            (1| id),
+                          data = data_semantics,
+                          family = "categorical",
+                          prior = set_prior("uniform(0,1)", class = "b"),
+                          iter = 8000, 
+                          chains = 3,
+                          cores = 3)
+
+save(model_uniform, file = "semantic_brms_uniform_0_1.RData")
+```
+
+
+create tidy data
+```{r}
+
+output<-broom.mixed::tidy(model, conf.int = TRUE, conf.level=.95,conf.method = c("quantile", "HPDinterval"), effects = 'fixed')
+
+output
+```
+
+
+```{r}
+library(xtable)
+xtable(output)
+
+# & Mean Est & Est.Error & HDI Lower & HDI Upper
+```
+
+
+Quick plot of the parameter estimates (Posterior intervals)
+```{r}
+mcmc_plot(model)
+```
+
+posterior distributions
+```{r}
+mcmc_plot(model, pars = "^b_", type = "hist")
+```
+
+using the builtin RStan capabilities to check mixing of the parameters
+```{r}
+mcmc_plot(model, pars = "^b_", type = "trace")
+```
+
+Diagnostic plots
+```{r}
+mcmc_plot(model, type = "neff")
+mcmc_plot(model, type = "rhat")
+```
+
+Acceptance and divergence plots
+```{r}
+mcmc_plot(model, type = "nuts_acceptance")
+mcmc_plot(model, type = "nuts_divergence")
+```
+
+We will then look at the summary statistics
+```{r}
+summary(model)
+```
+*Note* we want Rhat to at or very close to 1 for convergence
+
+Run a leave one out assessment
+```{r}
+loo(model)
+```
+
+Plot the loo results
+```{r}
+plot(loo(model))
+```
+
+Visualize the parameters
+```{r}
+plot(model, pars="^b")
+```
+
+Run a predictive probability check
+```{r}
+pp2 <- brms::pp_check(model)
+pp2 + theme_bw()
+```
+
+Assess the conditional effects of the model
+```{r}
+plot(conditional_effects(model, categorical = TRUE), ask = F)
+```
+
+```{r}
+rope(model_prior, range = c(-.1,.1), ci = .95, effects = "fixed")
+```
+
+```{r}
+prior_summary(model_prior, all =TRUE)
+
+stancode(model)
+```
+
+
+https://bookdown.org/ajkurz/Statistical_Rethinking_recoded/interactions.html
+```{r}
+conditions <- data.frame(layer = c("Early", "Middle", "Later"))
+conditions2 <- data.frame(Source.target.pair = c("TT", "OO", "OT"))
+conditional_effects(model, categorical=TRUE, conditions = c(conditions,conditions2))
+```
+when source target pair is X axis
+1 is early
+2 is middle
+3 is later
+
+```{r}
+conditions2 <- data.frame(Source.target.pair = c("OT", "OO", "TT"))
+p <- conditional_effects(model, categorical=TRUE, conditions = conditions2)[[1]]
+p$Source.target.pair <- factor(p$Source.target.pair, levels=c("OT", "OO", "TT"))
+
+ggplot(p) + aes(
+   x = factor(layer, level = c( "Early", "Middle", "Later")),
+   y = estimate__,
+   colour = effect2__
+  ) + facet_wrap(~Source.target.pair, ncol = 3) + 
+  geom_point(position = position_dodge(width = 0.5), size = 3) +
+  geom_errorbar(aes(ymin=lower__, ymax=upper__), width=0.5,
+                position = position_dodge(width = 0.5)) +
+  xlab("Layer-manipulation") +
+  ylab("Estimated probability") +
+  labs(color='Scene attribute') +
+  theme_bw()
+
+```
+
+
+```{r}
+conditional_effects(model, categorical=TRUE, conditions = conditions2)
+```
+
+
+turn off scientific notation
+```{r}
+options(scipen=999)
+```
+
+```{r}
+mcmc_areas(
+    model,
+    regex_pars = "b_",
+    prob = 0.95, 
+    point_est = "median",
+    area_method = "equal height"
+    ) +
+    geom_vline(xintercept = 0, color = "red", alpha = 0.6, lwd = .8, linetype = "dashed") 
+```
+
+get relative risk
+Please note that:
+est is the posterior mean, se is actually the sd of the posterior
+
+```{r}
+round(exp(fixef(model)),2)
+```
+
+https://cran.r-project.org/web/packages/brms/vignettes/brms_multilevel.pdf
+
+file:///C:/Users/eschuler/Downloads/Introduction_BMLMs_brms.pdf see page 26 for reporting
+
+## Extract table for LaTEX
+```{r}
+table <- xtable(round(exp(fixef(model_prior)),2))
+table
+```
+
+```{r}
+summary(model_prior)  # group level effect. not exponentiated
+table2 <- xtable(round(exp(ranef(model)),2))
+```
+
+
+look at the siny diagnostic app
+```{r}
+shinystan::launch_shinystan(model)
+```
+
+Good for main effects
+```{r}
+plot(conditional_effects(model, conditions = "layer:Source.target.pair",categorical=T))
+```
+
+
+
+
+Try to knit
+```{r}
+library(texreg)
+#knitreg(model, center=FALSE, caption = "test", table = TRUE)
+```
+```{r}
+load("data_brms.RData")
+```
+
+
+tester code:
+- no valid effects found
+```{r}
+int_conditions <- list(Source.target.pair = c("TT", "OO", "OT"))
+  
+conditions <- data.frame(layer=c("Early", "Middle", "Later"))
+conditional_effects(model, categorical=TRUE, 
+                    effects = "layer:Source.target.pair",
+                    int_conditions = int_conditions)
+```
+
+
+```{r}
+cond <- make_conditions(model, "layer")
+conditional_effects(model, categorical=TRUE, 
+                    effects = "layer:Source.target.pair",
+                    int_conditions = cond)
+```
+
+https://psyarxiv.com/cdxv3/download
+
+https://michael-franke.github.io/bayes_mixed_regression_tutorial/faintr/doc/faintr_basics.html
+
+load functions from faintr package (manually created a function source file as the package is not working right)
+```{r}
+#source("helper functions.R")
+
+#post_cells(model)$predictor_values
+```
+issue - only works with gaussian models.
+
+
+marginal effects
+```{r}
+sjPlot::plot_model(model)
+```
+
+```{r}
+plot(conditional_effects(model, categorical = T))
+```
