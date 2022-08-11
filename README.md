@@ -60,7 +60,7 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## Overview
 
 <img src="images/intro.jpg" alt="Intro" width="677" height="408" class="center">
 
@@ -78,7 +78,7 @@
 * Experiment 2: [Material attribute rating](/data-analysis/data/semantic-rating-good-data)
 * Experiment 3: [Perceptual evaluation of emerged scene attributes](/data-analysis/data/semantic-good-data)
 
-### Notebooks
+## Notebooks
 
 The following notebooks can be used to replicate the figures in the manuscript:
 
