@@ -81,8 +81,8 @@ The following notebooks can be used to replicate the figures in the manuscript:
 * [Experiment 1 analysis](/data-analysis/Analysis-real-vs-generated-discrimination.ipynb)
 * [Experiment 2 analysis](/data-analysis/Analysis-material-attribute-rating.ipynb)
 * [Experiment 3 analysis](/data-analysis/Analysis-scene-attribute-evaluation.ipynb)
-* [Experiment 3 analysis with Bayesian model](/data-analysis/MLM-analysis/MLM-semantics_brms version.Rmd)
-* [Independent Component Analysis of intermediate generative results of StyleGAN](/data-analysis/Find ICA and Sparse Code-Middle layer mix.ipynb)
+* [Experiment 3 analysis with Bayesian model](/data-analysis/MLM-analysis/MLM-semantics_brms_version.Rmd)
+* [Independent Component Analysis of intermediate generative results of StyleGAN](/data-analysis/ICA-Middle-layer.ipynb)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
