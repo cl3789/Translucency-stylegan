@@ -40,8 +40,8 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#data">Psychophysical experiment data</a></li>
+        <li><a href="#analysis">Notebooks</a></li>
       </ul>
     </li>
    <!--  <li><a href="#usage">Usage</a></li>
@@ -70,33 +70,19 @@ Material perception is essential in planning interactions with the environment. 
 <!-- GETTING STARTED -->
 ## Psychophysical experiment data
 
-* Experiment 1: Real-vs-generated discrimination [a relative link](/psychophysics-analysis/data/real-fake-judgment-good-data)
-* Experiment 2: Material attribute rating
-* Experiment 3: Perceptual evaluation of emerged scene attributes
+* Experiment 1: [Real-vs-generated discrimination](/data-analysis/data/real-fake-judgment-good-data)
+* Experiment 2: [Material attribute rating](/data-analysis/data/semantic-rating-good-data)
+* Experiment 3: [Perceptual evaluation of emerged scene attributes](/data-analysis/data/semantic-good-data)
 
-### Prerequisites
+### Notebooks
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+The following notebooks can be used to replicate the figures in the manuscript:
 
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+* [Experiment 1 analysis](/data-analysis/Analysis-real-vs-generated-discrimination.ipynb)
+* [Experiment 2 analysis](/data-analysis/Analysis-material-attribute-rating.ipynb)
+* [Experiment 3 analysis](/data-analysis/Analysis-scene-attribute-evaluation.ipynb)
+* [Experiment 3 analysis with Bayesian model](/data-analysis/MLM-analysis/MLM-semantics_brms version.Rmd)
+* [Independent Component Analysis of intermediate generative results of StyleGAN](/data-analysis/Find ICA and Sparse Code-Middle layer mix.ipynb)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
