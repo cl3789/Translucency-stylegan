@@ -80,9 +80,9 @@
 <!-- GETTING STARTED -->
 ## Psychophysical experiment data
 
-* Experiment 1: [Real-vs-generated discrimination](/data-analysis/data/real-fake-judgment-good-data)
-* Experiment 2: [Material attribute rating](/data-analysis/data/semantic-rating-good-data)
-* Experiment 3: [Perceptual evaluation of emerged scene attributes](/data-analysis/data/semantic-good-data)
+* Experiment 1: [Real-vs-generated discrimination](/data-analysis/data/Experiment1)
+* Experiment 2: [Material attribute rating](/data-analysis/data/Experiment2)
+* Experiment 3: [Perceptual evaluation of emerged scene attributes](/data-analysis/data/Experiment3)
 
 ## Notebooks
 
