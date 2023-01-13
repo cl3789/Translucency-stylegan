@@ -24,7 +24,7 @@
 <!-- PROJECT LOGO -->
 <br />
 
-<h3 align="center">Translucency perception emerges in deep generative representations for natural image synthesis</h3>
+<h3 align="center">Unsupervised learning reveals interpretable latent representations for translucency perception</h3>
 
   <p align="center">
     Chenxi Liao, Masataka Sawayama, Bei Xiao
@@ -60,11 +60,17 @@
 
 
 <!-- ABOUT THE PROJECT -->
-## Overview
+<div align="center">
+  <h1>Overview</h1>
+</div>
+  
 
-<img src="images/intro.jpg" alt="Intro" width="677" height="408" class="center">
+<div align="center">
+  <img src="images/intro.jpg" alt="Intro" width="677" height="408">
+</div>
 
-*Abstract:* Material perception is essential in planning interactions with the environment. The visual system relies on diagnostic image features to achieve material perception efficiently. However, discovering the features, especially for translucent materials, has been challenging due to the high variability of material appearances under interactions of shape, lighting, and intrinsic materials. Here, we learn a latent space (W+) informative of human translucency perception by developing a deep generative network trained to synthesize images of perceptually persuasive material appearances. Without supervision, human-interpretable scene attributes, including object's shape, material, and body color, spontaneously emerge in the latent space in a scale-specific manner. Critically, the middle-layers of the latent space selectively encode the translucency features correlating with perception, suggesting that translucent impressions are established in the mid-to-low spatial scale features. Our findings illustrate the promising capability of unsupervised learning in finding representative dimensions for materials and discovering perceptually relevant features for visual inference.
+*Abstract:* Humans constantly assess the appearance of materials to plan actions, such as stepping on icy roads without slipping. Visual inference of materials is important but challenging because a given material can appear dramatically different in various scenes. This problem especially stands out for translucent materials, whose appearance strongly depends on lighting, geometry, and viewpoint. Despite this, humans can still distinguish between different materials, and it remains unsolved how to systematically discover visual features pertinent to material inference from natural images. Here, we develop an unsupervised style-based image generation model to identify perceptually relevant dimensions for translucent material appearances from photographs. We find our model, with its layer-wise latent representation, can synthesize images of diverse and realistic materials. Importantly, without supervision, human-understandable scene attributes, including object’s shape, material, and body color, spontaneously emerge in the model’s layer-wise latent space in a scale-specific manner. By embedding an image into the learned latent space, we can manipulate specific layers’ latent code to modify the appearance of the object in the image. Specifically, we find that manipulation on the early-layers (coarse spatial scale) transforms the object’s shape, while manipulation on the later-layers (fine spatial scale) modifies its body color. The middle-layers of the latent space selectively encode translucency features and manipulation on such layers coherently modifies the translucency appearance, without changing the object's shape or body color. Moreover, we find the middle-layers of the latent space can successfully predict human translucency ratings, suggesting that translucent impressions are established in mid-to-low spatial scale features. This layer-wise latent representation allows us to systematically discover perceptually relevant image features for human translucency perception. Together, our findings reveal that learning the scale-specific statistical structure of natural images might be crucial for humans to efficiently represent material properties across contexts.
+
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
