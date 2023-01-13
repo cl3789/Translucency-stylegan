@@ -5,7 +5,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#setwd("C:/Users/eschuler/Desktop/perception")
+
 ```
 
 ```{r}
@@ -249,8 +249,6 @@ round(exp(fixef(model)),2)
 ```
 
 https://cran.r-project.org/web/packages/brms/vignettes/brms_multilevel.pdf
-
-file:///C:/Users/eschuler/Downloads/Introduction_BMLMs_brms.pdf see page 26 for reporting
 
 ## Extract table for LaTEX
 ```{r}
