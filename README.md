@@ -84,6 +84,54 @@
 * Experiment 2: [Material attribute rating](/data-analysis/data/Experiment2)
 * Experiment 3: [Perceptual evaluation of emerged scene attributes](/data-analysis/data/Experiment3)
 
+## Model
+* Please first download the pretrained TAG model from [Figshare](https://figshare.com/articles/dataset/Unsupervised_learning_reveals_interpretable_latent_representations_for_translucency_perception/21905463/1?file=38857887)
+* Place the downloaded folder "Trained_TAG_Model" in the project's directory. 
+* To run the pretrained pixel2style2pixel model, please set up the `pixel2style2pixel/configs/paths_config.py` and define:
+``` 
+dataset_paths = {
+    'soap_train':'/content/drive/MyDrive/soap_size1024_8k_train_test/soap_train_test8k/train_soap', ## Please change the path to the dataset
+    'soap_test':'/content/drive/MyDrive/soap_size1024_8k_train_test/soap_train_test8k/test_soap'    ## Please change the path to the dataset
+}
+```
+* To encode a real photograph into the latent space, you can use `pixel2style2pixel/scripts/inference.py` file. You can use the argument `save_latent_type` to embed the image in either W (`W`) or W+ (`Wplus_all`) space. Here is an example: 
+``` 
+python pixel2style2pixel/scripts/inference.py \
+--exp_dir=path/to/export_the_saving \
+--checkpoint_path=/path/to/pSp-encoder-soap-Wplus.pt \
+--data_path=/path/to/folder_of_photo_to_encode \
+--test_batch_size=5 \
+--test_workers=4 \
+--save_latent_type=Wplus_all \
+--couple_outputs
+```
+
+You can also load the W+ extracted from the 500 milky and 500 glycerin soap from this [ folder](/milky-glycerin-soaps-W-plus-code/500_milky_soap_Wplus_all_layers.npy).
+
+* To train the encoder starting from a checkpoint:
+``` 
+!python scripts/train.py \
+--dataset_type=soap_encode \
+--exp_dir= path/to/export_the_saving \
+--output_size=1024 \
+--workers=8 \
+--batch_size=4 \
+--test_batch_size=4 \
+--test_workers=8 \
+--val_interval=2500 \
+--save_interval=10000 \
+--encoder_type=GradualStyleEncoder \
+--start_from_latent_avg \
+--lpips_lambda=0.8 \
+--l2_lambda=1 \
+--id_lambda=0 \
+--w_norm_lambda=0.005 \
+--checkpoint_path=path/to/checkpoints/best_model.pt
+```
+
+* [TAG model](/data-analysis/TAG-playground.ipynb) illustrates the use of StyleGAN and the pixel2style2pixel encoder.
+
+
 ## Notebooks
 
 The following notebooks can be used to replicate the figures in the manuscript:
@@ -93,6 +141,7 @@ The following notebooks can be used to replicate the figures in the manuscript:
 * [Experiment 3 analysis](/data-analysis/Analysis-scene-attribute-evaluation.ipynb)
 * [Experiment 3 analysis with Bayesian model](/data-analysis/MLM-analysis/MLM-semantics_brms_version.Rmd)
 * [Independent Component Analysis of intermediate generative results of StyleGAN](/data-analysis/ICA-Middle-layer.ipynb)
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
