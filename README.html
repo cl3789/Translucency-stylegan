@@ -444,6 +444,10 @@ Overview
 <ul>
 <li>Please first download the pretrained TAG model from <a href="https://figshare.com/articles/dataset/Unsupervised_learning_reveals_interpretable_latent_representations_for_translucency_perception/21905463/1?file=38857887">Figshare</a></li>
 <li>Place the downloaded folder “Trained_TAG_Model” in the project’s directory.</li>
+<li>You also need the StyleGAN model. Please clone the following repository to your working directory:</li>
+</ul>
+<pre><code>!git clone https://github.com/NVlabs/stylegan3.git</code></pre>
+<ul>
 <li>To run the pretrained pixel2style2pixel model, please set up the <code>pixel2style2pixel/configs/paths_config.py</code> and define:</li>
 </ul>
 <pre><code>dataset_paths = {
@@ -451,15 +455,15 @@ Overview
     &#39;soap_test&#39;:&#39;/content/drive/MyDrive/soap_size1024_8k_train_test/soap_train_test8k/test_soap&#39;    ## Please change the path to the dataset
 }</code></pre>
 <ul>
-<li>To encode a real photograph into the latent space, you can use <code>pixel2style2pixel/scripts/inference.py</code> file. You can use the argument <code>save_latent_type</code> to embed the image in either W (<code>W</code>) or W+ (<code>Wplus_all</code>) space. Here is an example:</li>
+<li>To encode a real photograph into the latent space, you can use <code>pixel2style2pixel/scripts/inference.py</code> file. You can use the argument <code>save_latent_type</code> to embed the image in either W (<code>W</code>) or W+ (<code>Wplus_all</code>) space, and save the latent codes to a <code>.npy</code> file. Here is an example:</li>
 </ul>
 <pre><code>python pixel2style2pixel/scripts/inference.py \
---exp_dir=path/to/export_the_saving \
---checkpoint_path=/path/to/pSp-encoder-soap-Wplus.pt \
---data_path=/path/to/folder_of_photo_to_encode \
+--exp_dir=path/to/export_the_saving \  ## need to change to your checkpoint path
+--checkpoint_path=/path/to/pSp-encoder-soap-Wplus.pt \  ## need to change to the pSp encoder checkpoint path
+--data_path=/path/to/folder_of_photo_to_encode \ ## need to change to your image folder (images you want to encode) path
 --test_batch_size=5 \
 --test_workers=4 \
---save_latent_type=Wplus_all \
+--save_latent_type=Wplus_all \  ## accept &quot;Wplus_all&quot;, &quot;W&quot;, &quot;Wplus_one_layer&quot;. if &quot;Wplus_one_layer&quot; is used, please also use an additional argument &quot;save_latent_layer&quot; to indicate which layer of W+ to save.
 --couple_outputs</code></pre>
 <p>You can also load the W+ extracted from the 500 milky and 500 glycerin soap from this <a href="/milky-glycerin-soaps-W-plus-code/500_milky_soap_Wplus_all_layers.npy">folder</a>.</p>
 <ul>
@@ -467,7 +471,7 @@ Overview
 </ul>
 <pre><code>!python scripts/train.py \
 --dataset_type=soap_encode \
---exp_dir= path/to/export_the_saving \
+--exp_dir= path/to/export_the_saving \ ## need to change to your saving directory path
 --output_size=1024 \
 --workers=8 \
 --batch_size=4 \
@@ -481,9 +485,10 @@ Overview
 --l2_lambda=1 \
 --id_lambda=0 \
 --w_norm_lambda=0.005 \
---checkpoint_path=path/to/checkpoints/best_model.pt</code></pre>
+--checkpoint_path=path/to/checkpoints/best_model.pt ## need to change to your checkpoint path</code></pre>
+<p>Please also check out the original <a href="https://github.com/eladrich/pixel2style2pixel">pixel2style2pixel</a> repository to see more implementation details.</p>
 <ul>
-<li><a href="/data-analysis/TAG-playground.ipynb">TAG model</a> illustrates the use of StyleGAN and the pixel2style2pixel encoder.</li>
+<li><a href="/data-analysis/TAG_playground.ipynb">TAG model</a> illustrates the use of StyleGAN and the pixel2style2pixel encoder.</li>
 </ul>
 </div>
 <div id="notebooks" class="section level2">
